@@ -1,0 +1,10 @@
+type Project @model {
+  id: ID! @unique
+  title: String!
+  description: String!
+  image: String!
+  liveSiteUrl: String!
+  githubUrl: String
+  upvote: Boolean
+  createdBy: String!
+}
