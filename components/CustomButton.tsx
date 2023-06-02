@@ -11,7 +11,7 @@ type Props = {
 const CustomButton: FC<Props> = ({ title, leftIcon, rightIcon, handleClick }) => (
   <button
     type="button"
-    className="flexCenter gap-[13px] p-[14px] text-white bg-primary-purple rounded-xl text-sm leading-[17px] font-medium"
+    className="flexCenter gap-[13px] p-[14px] text-white bg-primary-purple rounded-xl text-sm leading-[17px] font-medium max-md:w-full"
     onClick={handleClick}
   >
     {leftIcon && (

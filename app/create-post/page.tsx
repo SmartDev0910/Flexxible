@@ -19,10 +19,7 @@ const CreateProjectModal = () => {
 
     if (inputElement.files) {
       if (!inputElement.files[0].type.includes('image')) {
-        alert({
-          text: 'Please upload an image file!',
-          type: 'danger',
-        });
+        alert('Please upload an image file!');
 
         return;
       }
@@ -37,7 +34,7 @@ const CreateProjectModal = () => {
   return (
     <Modal>
       <h3 className="max-md:text-center w-full md:text-[47px] text-[30px] md:leading-[61px] leading-[35px] font-extrabold">Create a new Project</h3>
-      <div className="flexStart flex-col w-full pt-[90px] gap-10 text-lg">
+      <div className="flexStart flex-col w-full lg:pt-[90px] pt-12 gap-10 text-lg">
         <div className="flexStart w-full lg:min-h-[400px] min-h-[200px] relative">
           <label htmlFor="poster" className="flexCenter text-center w-full h-full p-20 text-[#3D3D4E] border-2 border-[#D9D9D9] border-dashed">Choose a poster for your project</label>
           <input id="poster" type="file" className="absolute z-30 w-full opacity-0 h-full cursor-pointer" onChange={(e) => addPoster(e)} />

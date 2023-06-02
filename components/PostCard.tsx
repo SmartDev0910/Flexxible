@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FC, useState } from 'react';
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { FC, useState } from "react";
 
 type Props = {
-  id: string
-}
+  id: string;
+};
 
 const PostCard: FC<Props> = ({ id }) => {
   const [likes, setLikes] = useState<number>(0);
-  const [copied, setCopied] = useState<string>('');
+  const [copied, setCopied] = useState<string>("");
   const { data: session } = useSession();
 
   // const handleShare = () => {
@@ -33,14 +33,9 @@ const PostCard: FC<Props> = ({ id }) => {
         <button
           type="button"
           className="flexCenter gap-[8px] absolute top-0 right-0 font-semibold text-sm leading-[17px] text-white p-[16px]"
-          onClick={() => console.log('copy')}
+          onClick={() => console.log("copy")}
         >
-          <Image
-            src="/assets/share.svg"
-            width={13}
-            height={14}
-            alt="share"
-          />
+          <Image src="/assets/share.svg" width={13} height={14} alt="share" />
           10
         </button>
       </Link>
@@ -55,7 +50,9 @@ const PostCard: FC<Props> = ({ id }) => {
             alt="profile image"
           />
           <p>Ever</p>
-          <p className="text-[8px] leading-[10px] font-semibold text-white bg-[#D9D9D9] px-[4px] py-[2px]">TEAM</p>
+          <p className="text-[8px] leading-[10px] font-semibold text-white bg-[#D9D9D9] px-[4px] py-[2px]">
+            TEAM
+          </p>
         </div>
 
         <div className="flexCenter gap-[11px]">
@@ -69,12 +66,7 @@ const PostCard: FC<Props> = ({ id }) => {
             124
           </div>
           <div className="flexCenter gap-[7px]">
-            <Image
-              src="/assets/eye.svg"
-              width={12}
-              height={9}
-              alt="eye"
-            />
+            <Image src="/assets/eye.svg" width={12} height={9} alt="eye" />
             1.4K
           </div>
         </div>

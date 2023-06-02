@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { ChangeEvent, useState, SyntheticEvent } from 'react'
-import { useSession } from 'next-auth/react';
-import { useMutation } from '@apollo/client';
-import Image from 'next/image';
-import Modal from '@/components/Modal';
-import CustomButton from '@/components/CustomButton';
+import React, { ChangeEvent, useState, SyntheticEvent } from "react";
+import { useSession } from "next-auth/react";
+import { useMutation } from "@apollo/client";
+import Image from "next/image";
+import Modal from "@/components/Modal";
+import CustomButton from "@/components/CustomButton";
 
-import { ADD_PROJECT } from '@/graphql/query';
+import { ADD_PROJECT } from "@/graphql/query";
 
 const CreateProjectModal = () => {
   const [title, setTitle] = useState<string>("");
@@ -15,11 +15,8 @@ const CreateProjectModal = () => {
   const [url, setUrl] = useState<string>("");
   const [poster, setPoster] = useState<string | undefined>(undefined);
   const { data: session } = useSession();
-  const [addProjectParams, {
-    data: aData,
-    loading: aLoading,
-    error: aError,
-  }] = useMutation(ADD_PROJECT);
+  const [addProjectParams, { data: aData, loading: aLoading, error: aError }] =
+    useMutation(ADD_PROJECT);
 
   const saveProject = (event: SyntheticEvent) => {
     event.preventDefault();
@@ -27,12 +24,12 @@ const CreateProjectModal = () => {
       variables: {
         title: title,
         description: description,
-        image: poster,
+        image: "",
         liveSiteUrl: url,
-        createdBy: session?.user?.name
-      }
+        createdBy: session?.user?.name,
+      },
     });
-  }
+  };
 
   const addPoster = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -41,11 +38,8 @@ const CreateProjectModal = () => {
     const fileReader = new FileReader();
 
     if (inputElement.files) {
-      if (!inputElement.files[0].type.includes('image')) {
-        alert({
-          text: 'Please upload an image file!',
-          type: 'danger',
-        });
+      if (!inputElement.files[0].type.includes("image")) {
+        alert("Please upload an image file!");
 
         return;
       }
@@ -55,62 +49,79 @@ const CreateProjectModal = () => {
       };
       fileReader.readAsDataURL(inputElement.files[0]);
     }
-  }
+  };
 
   return (
     <Modal>
-      <h3 className="max-md:text-center w-full md:text-[47px] text-[30px] md:leading-[61px] leading-[35px] font-extrabold">Create a new Project</h3>
-      <div className="flexStart flex-col w-full pt-[90px] gap-10 text-lg">
+      <h3 className="max-md:text-center w-full md:text-[47px] text-[30px] md:leading-[61px] leading-[35px] font-extrabold">
+        Create a new Project
+      </h3>
+      <div className="flexStart flex-col w-full lg:pt-[90px] pt-12 gap-10 text-lg">
         <div className="flexStart w-full lg:min-h-[400px] min-h-[200px] relative">
-          <label htmlFor="poster" className="flexCenter text-center w-full h-full p-20 text-[#3D3D4E] border-2 border-[#D9D9D9] border-dashed">Choose a poster for your project</label>
-          <input id="poster" type="file" className="absolute z-30 w-full opacity-0 h-full cursor-pointer" onChange={(e) => addPoster(e)} />
+          <label
+            htmlFor="poster"
+            className="flexCenter text-center w-full h-full p-20 text-[#3D3D4E] border-2 border-[#D9D9D9] border-dashed"
+          >
+            Choose a poster for your project
+          </label>
+          <input
+            id="poster"
+            type="file"
+            className="absolute z-30 w-full opacity-0 h-full cursor-pointer"
+            onChange={(e) => addPoster(e)}
+          />
           {poster && (
-            <Image
-              src={poster}
-              className="object-cover"
-              fill
-              alt="poster"
-            />
+            <Image src={poster} className="object-cover" fill alt="poster" />
           )}
         </div>
 
         <div className="flexStart flex-col w-full gap-[25px]">
-          <label htmlFor="title" className="w-full text-[#3d3d4e]">Title</label>
+          <label htmlFor="title" className="w-full text-[#3d3d4e]">
+            Title
+          </label>
           <input
             type="text"
             placeholder="Flexibble - Dribble Clone"
             value={title}
             className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
-            onChange={(e) => setTitle(e.target.value)} />
-
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
         <div className="flexStart flex-col w-full gap-[25px]">
-          <label htmlFor="title" className="w-full text-[#3d3d4e]">Description</label>
+          <label htmlFor="title" className="w-full text-[#3d3d4e]">
+            Description
+          </label>
           <textarea
             placeholder="A dribble clone web application made using..."
             value={description}
             className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
-            onChange={(e) => setDescription(e.target.value)} />
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </div>
 
         <div className="flexStart flex-col w-full gap-[25px]">
-          <label htmlFor="title" className="w-full text-[#3d3d4e]">WebSite URL</label>
+          <label htmlFor="title" className="w-full text-[#3d3d4e]">
+            WebSite URL
+          </label>
           <input
             type="url"
             placeholder="https://flexibble.com"
             value={url}
             className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
-            onChange={(e) => setUrl(e.target.value)} />
+            onChange={(e) => setUrl(e.target.value)}
+          />
         </div>
 
-        <CustomButton
-          title="Create"
-          leftIcon="/assets/plus.svg"
-          handleClick={(e) => saveProject(e) }
-        />
+        <div className="flexStart w-full">
+          <CustomButton
+            title="Create"
+            leftIcon="/assets/plus.svg"
+            handleClick={() => console.log("Upload")}
+          />
+        </div>
       </div>
-    </Modal >
-  )
-}
+    </Modal>
+  );
+};
 
 export default CreateProjectModal;

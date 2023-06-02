@@ -1,4 +1,4 @@
-type Project @model {
+type Project @model @search {
   id: ID! @unique
   title: String!
   description: String!

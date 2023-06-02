@@ -10,7 +10,7 @@ import CustomButton from './CustomButton';
 
 const ProfileModal = ({ openModal }: { openModal: boolean }) => (
   <div className={`${openModal ? 'flexCenter flex-col' : 'hidden'} bg-[#F1F4F5] absolute top-14 py-2 min-w-[120px] rounded-xl`}>
-    <Link href="/profile" className="text-small p-2">Profile</Link>
+    <Link href="/profile" className="text-small py-4">Profile</Link>
     <CustomButton title="Sign out" handleClick={() => signOut()} />
   </div>
 )
