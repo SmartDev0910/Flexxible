@@ -2,12 +2,11 @@
 
 import React, { ChangeEvent, useState, SyntheticEvent } from "react";
 import { useSession } from "next-auth/react";
-import { useMutation } from "@apollo/client";
 import Image from "next/image";
 import Modal from "@/components/Modal";
 import CustomButton from "@/components/CustomButton";
 
-import { ADD_PROJECT } from "@/graphql/query";
+import { AddProject } from "@/graphql/server";
 
 const CreateProjectModal = () => {
   const [title, setTitle] = useState<string>("");
@@ -15,20 +14,11 @@ const CreateProjectModal = () => {
   const [url, setUrl] = useState<string>("");
   const [poster, setPoster] = useState<string | undefined>(undefined);
   const { data: session } = useSession();
-  const [addProjectParams, { data: aData, loading: aLoading, error: aError }] =
-    useMutation(ADD_PROJECT);
 
-  const saveProject = (event: SyntheticEvent) => {
+  const saveProject = async (event: SyntheticEvent) => {
     event.preventDefault();
-    addProjectParams({
-      variables: {
-        title: title,
-        description: description,
-        image: "",
-        liveSiteUrl: url,
-        createdBy: session?.user?.name,
-      },
-    });
+    const username = session?.user?.name || "";
+    await AddProject(title, description, "", url, "", username);
   };
 
   const addPoster = (e: ChangeEvent<HTMLInputElement>) => {
@@ -116,7 +106,7 @@ const CreateProjectModal = () => {
           <CustomButton
             title="Create"
             leftIcon="/assets/plus.svg"
-            handleClick={() => console.log("Upload")}
+            handleClick={async (e) => await saveProject(e)}
           />
         </div>
       </div>

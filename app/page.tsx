@@ -1,35 +1,32 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
 import HomeFilter from "@/components/HomeFilter";
 import PostCard from "@/components/PostCard";
-import { useQuery } from "@apollo/client";
 
-import { GET_PROJECTS } from "@/graphql/query";
 import { INodeParam } from "@/utils/type";
+import { getAllProjects } from "@/graphql/server";
 
 const Home = () => {
-  const { data: session } = useSession();
-  const { data } = useQuery(GET_PROJECTS);
-
+  const [project, setProject] = useState({
+    projectCollection: { edges: [] },
+  });
   useEffect(() => {
-    console.log(session?.user?.name);
-    window.document.body.style.overflowY = 'auto';
+    window.document.body.style.overflowY = "auto";
+    async function fetchData() {
+      const result = await getAllProjects();
+      setProject(result);
+    }
+    fetchData();
   }, []);
 
   return (
     <section className="flexStart flex-col paddings">
       <HomeFilter />
       <section className="flexStart flex-wrap mt-[66px] w-full">
-        {data?.projectCollection?.edges?.map(
+        {project?.projectCollection?.edges?.map(
           ({ node }: INodeParam, index: number) => (
-            <PostCard
-              key={`${node?.id}-${index}`}
-              id={node?.id}
-              image={node?.image}
-            />
+            <PostCard key={`${node?.id}-${index}`} id={node?.id} />
           )
         )}
       </section>
