@@ -43,7 +43,7 @@ const EditPost = ({ params: { id } }: { params: { id: string } }) => {
       setTitle(result?.project?.title);
       setDescription(result?.project?.description);
       setUrl(result?.project?.liveSiteUrl);
-      setUrl(result?.project?.category);
+      setCategory(result?.project?.category);
     }
     fetchData();
   }, []);

@@ -112,10 +112,14 @@ export async function getProjectsByUser(createdBy: string) {
   return data;
 }
 
-export async function FilterProjects(pageNum: number, search: string) {
-  const query = `
-		query filterProjects($pageNum: Int!, $search: String) {
-			projectSearch(first: $pageNum, query: $search) {
+export async function FilterProjects(
+  pageNum: number,
+  query: string | null,
+  category: string
+) {
+  const gquery = `
+		query filterProjects($pageNum: Int!, $query: String, $category: String) {
+			projectSearch(first: $pageNum, query: $query, filter: { category: { eq: $category } }) {
 				edges {
 					node {
 						id
@@ -135,11 +139,12 @@ export async function FilterProjects(pageNum: number, search: string) {
 	`;
 
   const variables = {
-    search: search,
     pageNum: pageNum,
+    category: category,
+    query: query,
   };
 
-  const encodedQuery = encodeURIComponent(query);
+  const encodedQuery = encodeURIComponent(gquery);
   const encodedVariables = encodeURIComponent(JSON.stringify(variables));
   const url = `${process.env.GRAFBASE_API_URL}?query=${encodedQuery}&variables=${encodedVariables}`;
 
