@@ -6,9 +6,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { INodeParam } from "@/utils/type";
-import { getProjectsById, getProjectsByUser } from "@/graphql/server";
+import {
+  getProjectsById,
+  getProjectsByUser,
+  DeleteProject,
+} from "@/graphql/server";
 
 const Project = ({ params: { id } }: { params: { id: string } }) => {
+  const [liked, setLiked] = useState(false);
   const [project, setProject] = useState({
     project: { title: "", createdBy: "", description: "" },
   });
@@ -27,8 +32,44 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
     fetchData();
   }, []);
 
+  const deleteProject = async () => {
+    const res = await DeleteProject(id);
+    window.location.href = "/";
+  };
+
   return (
     <Modal>
+      <section className="fixed flex gap-[15px] flex-col right-10 top-22">
+        <Image src="/assets/profile.png" width={50} height={50} alt="profile" />
+        <Link
+          href={""}
+          className="flexCenter p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
+          onClick={() => (window.location.href = "/edit-post/" + id)}
+        >
+          <Image
+            src="/assets/pencile.svg"
+            className="min-w-[15px]"
+            width={14}
+            height={14}
+            alt="pencile"
+          />
+        </Link>
+
+        <button
+          type="button"
+          className="flexCenter p-[14px] text-[#3D3D4E] bg-primary-purple rounded-xl text-sm leading-[17px] font-medium w-full"
+          onClick={deleteProject}
+        >
+          <Image
+            src="/assets/trash.svg"
+            className="min-w-[15px]"
+            width={14}
+            height={14}
+            alt="trash"
+          />
+        </button>
+      </section>
+
       <section className="flexCenter max-lg:flex-col gap-x-[299px] gap-y-[30px] max-lg:w-full">
         <div className="flexStart gap-[20px] w-full">
           <Image
@@ -61,20 +102,31 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
         <div className="flexCenter max-md:flex-col gap-[18px] lg:w-fit w-full">
           <button
             type="button"
-            className="flexCenter gap-[13px] p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
+            className="flexCenter gap-[7px] py-[16px] px-[17px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
             onClick={() => console.log("Save")}
           >
-            <Image src="/assets/save.svg" width={14} height={14} alt="save" />
+            <Image
+              src="/assets/save.svg"
+              className="min-w-[14px] min-h-[14px]"
+              width={14}
+              height={14}
+              alt="save"
+            />
             Save
           </button>
 
           <button
             type="button"
-            className="flexCenter gap-[13px] p-[14px] text-white bg-primary-purple rounded-xl text-sm leading-[17px] font-medium w-full"
-            onClick={() => console.log("Like")}
+            className={`flexCenter gap-[7px] py-[16px] px-[17px] ${
+              liked
+                ? "text-primary-purple bg-white border-[1px] border-primary-purple"
+                : "text-white bg-primary-purple"
+            } rounded-xl text-sm leading-[17px] font-medium w-full`}
+            onClick={() => setLiked(!liked)}
           >
             <Image
-              src="/assets/hearth-white.svg"
+              src={`/assets/hearth-${liked ? "purple" : "white"}.svg`}
+              className="min-w-[14px] min-h-[14px]"
               width={14}
               height={14}
               alt="like"

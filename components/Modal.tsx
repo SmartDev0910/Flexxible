@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useRef, useEffect, ReactNode, MouseEventHandler } from 'react';
+import React, { useCallback, useRef, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 

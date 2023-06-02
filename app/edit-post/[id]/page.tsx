@@ -1,15 +1,17 @@
 "use client";
 
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
-import React, { ChangeEvent, useState } from "react";
 
 import CustomButton from "@/components/CustomButton";
-import Modal from "@/components/Modal";
 import CategoryModal from "@/components/CategoryModal";
+import { useSession } from "next-auth/react";
+import { getProjectsById, EditProject } from "@/graphql/server";
 
-const CreateProjectModal = () => {
+const EditPost = ({ params: { id } }: { params: { id: string } }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const { data: session } = useSession();
   const [url, setUrl] = useState<string>("");
   const [poster, setPoster] = useState<string | undefined>(undefined);
   const [category, setCategory] = useState<string>("Web Design");
@@ -34,16 +36,43 @@ const CreateProjectModal = () => {
     }
   };
 
+  useEffect(() => {
+    window.document.body.style.overflowY = "auto";
+    async function fetchData() {
+      const result = await getProjectsById(id);
+      setTitle(result?.project?.title);
+      setDescription(result?.project?.description);
+      setUrl(result?.project?.liveSiteUrl);
+      setUrl(result?.project?.category);
+    }
+    fetchData();
+  }, []);
+
+  const editProject = async () => {
+    const username = session?.user?.name || "";
+    const res = await EditProject(
+      id,
+      title,
+      description,
+      "image",
+      url,
+      "githubUrl",
+      username,
+      category
+    );
+    window.location.href = "/";
+  };
+
   return (
-    <Modal>
+    <main className="flex flex-col w-full paddings">
       <h3 className="max-md:text-center w-full md:text-[47px] text-[30px] md:leading-[61px] leading-[35px] font-extrabold">
-        Create a new Project
+        Edit your Project
       </h3>
       <div className="flexStart flex-col w-full lg:pt-[90px] pt-12 gap-10 text-lg">
-        <div className="flexStart w-full lg:min-h-[400px] min-h-[200px] relative">
+        <div className="flexStart w-full relative">
           <label
             htmlFor="poster"
-            className="flexCenter text-center w-full h-full p-20 text-[#3D3D4E] border-2 border-[#D9D9D9] border-dashed"
+            className="flexCenter text-center w-full lg:min-h-[400px] min-h-[200px] text-[#3D3D4E] border-2 border-[#D9D9D9] border-dashed"
           >
             Choose a poster for your project
           </label>
@@ -98,15 +127,11 @@ const CreateProjectModal = () => {
         <CategoryModal category={category} setCategory={setCategory} />
 
         <div className="flexStart w-full">
-          <CustomButton
-            title="Create"
-            leftIcon="/assets/plus.svg"
-            handleClick={() => console.log("Upload")}
-          />
+          <CustomButton title="Save & Exit" handleClick={editProject} />
         </div>
       </div>
-    </Modal>
+    </main>
   );
 };
 
-export default CreateProjectModal;
+export default EditPost;

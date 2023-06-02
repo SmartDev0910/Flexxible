@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { HomeFilters } from '@/constants/filters';
 
 const HomeFilter = () => {
-  const [tag, setTag] = useState<string>('Discover');
+  const [tag, setTag] = useState('Discover');
 
   return (
     <div className="flexBetween w-full gap-5 flex-wrap">
@@ -37,7 +37,7 @@ const HomeFilter = () => {
           src="/assets/filters.svg"
           width={10}
           height={5}
-          alt="arrow down"
+          alt="filters"
         />
         Filters
       </button>

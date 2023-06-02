@@ -1,24 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 import SearchBar from './SearchBar';
 import CustomButton from './CustomButton';
-
-const ProfileModal = ({ openModal }: { openModal: boolean }) => (
-  <div className={`${openModal ? 'flexCenter flex-col' : 'hidden'} bg-[#F1F4F5] absolute top-14 py-2 min-w-[120px] rounded-xl`}>
-    <Link href="/profile" className="text-small py-4">Profile</Link>
-    <CustomButton title="Sign out" handleClick={() => signOut()} />
-  </div>
-)
+import ProfileModal from './ProfileModal';
 
 const Navbar = () => {
   const { data: session } = useSession();
-
-  const [openModal, setOpenModal] = useState<boolean>(false);
 
   return (
     <nav className="flexBetween py-[18px] px-[30px] border-b-[1px] border-[#EBEAEA]">
@@ -46,16 +37,7 @@ const Navbar = () => {
         <SearchBar />
         {session?.user ? (
           <>
-            <div className="flexCenter relative z-10" onClick={() => setOpenModal(!openModal)}>
-              <ProfileModal openModal={openModal} />
-              <Image
-                src={session.user.image!}
-                width={45}
-                height={45}
-                className="rounded-full"
-                alt="user profile image"
-              />
-            </div>
+            <ProfileModal />
             <Link
               href="/create-post"
               className="flex gap-[13px] p-[14px] text-white bg-primary-purple rounded-xl text-sm leading-[17px] font-medium"

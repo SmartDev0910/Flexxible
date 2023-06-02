@@ -17,6 +17,7 @@ export async function getAllProjects() {
 						liveSiteUrl
 						githubUrl
 						upvote
+						category
 					}
 				}
 			}
@@ -48,6 +49,7 @@ export async function getProjectsById(id: string) {
 				githubUrl
 				upvote
 				createdBy
+				category
 			}
 		}
 	`;
@@ -84,6 +86,7 @@ export async function getProjectsByUser(createdBy: string) {
 						image
 						upvote
 						createdBy
+						category
 						updatedAt
 					}
 				}
@@ -123,6 +126,7 @@ export async function FilterProjects(pageNum: number, search: string) {
 						image
 						upvote
 						createdBy
+						category
 						updatedAt
 					}
 				}
@@ -155,7 +159,8 @@ export async function AddProject(
   image: string,
   liveSiteUrl: string,
   githubUrl: string,
-  createdBy: string
+  createdBy: string,
+  category: string
 ) {
   const res = await fetch(`${process.env.GRAFBASE_API_URL}`, {
     method: "POST",
@@ -169,6 +174,7 @@ export async function AddProject(
 					$liveSiteUrl: String!
 					$githubUrl: String
 					$createdBy: String!
+					$category: String!
 				) {
 					projectCreate(
 						input: {
@@ -178,6 +184,7 @@ export async function AddProject(
 							liveSiteUrl: $liveSiteUrl
 							githubUrl: $githubUrl
 							createdBy: $createdBy
+							category: $category
 						}
 					) {
 						project {
@@ -187,6 +194,7 @@ export async function AddProject(
 							liveSiteUrl
 							githubUrl
 							createdBy
+							category
 						}
 					}
 				}
@@ -198,6 +206,7 @@ export async function AddProject(
         liveSiteUrl: liveSiteUrl,
         githubUrl: githubUrl,
         createdBy: createdBy,
+        category: category,
       },
     }),
   });
@@ -208,12 +217,14 @@ export async function AddProject(
 }
 
 export async function EditProject(
+  id: string,
   title: string,
   description: string,
   image: string,
   liveSiteUrl: string,
   githubUrl: string,
-  createdBy: string
+  createdBy: string,
+  category: string
 ) {
   const res = await fetch(`${process.env.GRAFBASE_API_URL}`, {
     method: "POST",
@@ -221,13 +232,14 @@ export async function EditProject(
     body: JSON.stringify({
       query: `
 				mutation EditProject(
-					$id: String!
+					$id: ID!
 					$title: String!
 					$description: String!
 					$image: String!
 					$liveSiteUrl: String!
 					$githubUrl: String
 					$createdBy: String!
+					$category: String!
 				) {
 					projectUpdate(
 						by: { id: $id }
@@ -238,6 +250,7 @@ export async function EditProject(
 							liveSiteUrl: $liveSiteUrl
 							githubUrl: $githubUrl
 							createdBy: $createdBy
+							category: $category
 						}
 					) {
 						project {
@@ -251,17 +264,20 @@ export async function EditProject(
 							updatedAt
 							upvote
 							createdBy
+							category
 						}
 					}
 				}
 			`,
       variables: {
+        id: id,
         title: title,
         description: description,
         image: image,
         liveSiteUrl: liveSiteUrl,
         githubUrl: githubUrl,
         createdBy: createdBy,
+        category: category,
       },
     }),
   });

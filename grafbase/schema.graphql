@@ -7,4 +7,5 @@ type Project @model @search {
   githubUrl: String
   upvote: Boolean
   createdBy: String!
+  category: String
 }

@@ -8,17 +8,21 @@ import CustomButton from "@/components/CustomButton";
 
 import { AddProject } from "@/graphql/server";
 
+import CategoryModal from "@/components/CategoryModal";
+
 const CreateProjectModal = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const [poster, setPoster] = useState<string | undefined>(undefined);
+  const [category, setCategory] = useState<string>("Web Design");
   const { data: session } = useSession();
 
   const saveProject = async (event: SyntheticEvent) => {
     event.preventDefault();
     const username = session?.user?.name || "";
-    await AddProject(title, description, "", url, "", username);
+    await AddProject(title, description, "", url, "", username, category);
+    window.location.href = "/";
   };
 
   const addPoster = (e: ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +75,7 @@ const CreateProjectModal = () => {
           </label>
           <input
             type="text"
+            id="title"
             placeholder="Flexibble - Dribble Clone"
             value={title}
             className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
@@ -95,12 +100,15 @@ const CreateProjectModal = () => {
           </label>
           <input
             type="url"
+            id="website"
             placeholder="https://flexibble.com"
             value={url}
             className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
             onChange={(e) => setUrl(e.target.value)}
           />
         </div>
+
+        <CategoryModal category={category} setCategory={setCategory} />
 
         <div className="flexStart w-full">
           <CustomButton
