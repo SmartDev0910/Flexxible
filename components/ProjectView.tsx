@@ -1,47 +1,81 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import Modal from "@/components/Modal";
 import PostCard from "@/components/PostCard";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState, FC } from "react";
+import { INodeParam } from "@/utils/type";
+import { getProjectsByUser, DeleteProject } from "@/graphql/server";
+import { useSession } from "next-auth/react";
 
-const Project = ({ params: { id } }: { params: { id: string } }) => {
+type Props = {
+  project: any;
+};
+
+const ProjectView: FC<Props> = ({ project }) => {
+  const { data: session } = useSession();
   const [liked, setLiked] = useState(false);
+  const [user, setUser] = useState("");
+
+  const [projectsByUser, setProjectsByUser] = useState({
+    projectSearch: { edges: [] },
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      const username = session?.user?.name || "";
+      setUser(username);
+      const createdBy = project?.project?.createdBy;
+      const resultByUser = await getProjectsByUser(createdBy);
+      setProjectsByUser(resultByUser);
+    }
+    fetchData();
+  }, []);
+
+  const deleteProject = async () => {
+    await DeleteProject(project?.project?.id);
+    window.location.href = "/";
+  };
 
   return (
     <Modal>
       <section className="fixed max-md:hidden flex gap-[15px] flex-col right-10 top-22">
         <Image src="/assets/profile.png" width={50} height={50} alt="profile" />
-        <Link
-          href={`/edit-post/${id}`}
-          className="flexCenter p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
-          onClick={() => console.log("Edit")}
-        >
-          <Image
-            src="/assets/pencile.svg"
-            className="min-w-[15px]"
-            width={14}
-            height={14}
-            alt="save"
-          />
-        </Link>
-
-        <button
-          type="button"
-          className="flexCenter p-[14px] text-[#3D3D4E] bg-primary-purple rounded-xl text-sm leading-[17px] font-medium w-full"
-          onClick={() => console.log("Delete")}
-        >
-          <Image
-            src="/assets/trash.svg"
-            className="min-w-[15px]"
-            width={14}
-            height={14}
-            alt="save"
-          />
-        </button>
+        {user === project?.project?.createdBy ? (
+          <Link
+            href={`/edit-post/${project?.project?.id}`}
+            className="flexCenter p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
+          >
+            <Image
+              src="/assets/pencile.svg"
+              className="min-w-[15px]"
+              width={14}
+              height={14}
+              alt="save"
+            />
+          </Link>
+        ) : (
+          ""
+        )}
+        {user === project?.project?.createdBy ? (
+          <button
+            type="button"
+            className="flexCenter p-[14px] text-[#3D3D4E] bg-primary-purple rounded-xl text-sm leading-[17px] font-medium w-full"
+            onClick={() => deleteProject()}
+          >
+            <Image
+              src="/assets/trash.svg"
+              className="min-w-[15px]"
+              width={14}
+              height={14}
+              alt="save"
+            />
+          </button>
+        ) : (
+          ""
+        )}
       </section>
-
       <section className="flexCenter max-lg:flex-col gap-x-[299px] gap-y-[30px] max-lg:w-full">
         <div className="flexStart gap-[20px] w-full">
           <Image
@@ -53,11 +87,12 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
           />
           <div className="flexStart flex-col gap-y-[10px]">
             <p className="text-[18px] leading-[22px] font-semibold">
-              Crypik - Crypto Wallet Dashboard
+              {project?.project?.title}
             </p>
             <div className="flex text-[14px] leading-[17px] font-normal gap-[9px] w-full">
               <Link href="/profile/id">
-                Clair Danko <span className="text-[#4d4a4a]">for</span> JSM
+                {project?.project?.createdBy}{" "}
+                <span className="text-[#4d4a4a]">for</span> JSM
               </Link>
               <Image src="/assets/dot.svg" width={4} height={4} alt="dot" />
               <button type="button">Follow</button>
@@ -87,10 +122,11 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
 
           <button
             type="button"
-            className={`flexCenter gap-[7px] py-[16px] px-[17px] ${liked
-              ? "text-primary-purple bg-white border-[1px] border-primary-purple"
-              : "text-white bg-primary-purple"
-              } rounded-xl text-sm leading-[17px] font-medium w-fit`}
+            className={`flexCenter gap-[7px] py-[16px] px-[17px] ${
+              liked
+                ? "text-primary-purple bg-white border-[1px] border-primary-purple"
+                : "text-white bg-primary-purple"
+            } rounded-xl text-sm leading-[17px] font-medium w-fit`}
             onClick={() => setLiked(!liked)}
           >
             <Image
@@ -103,9 +139,8 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
             Like
           </button>
           <Link
-            href={`/edit-post/${id}`}
+            href={`/edit-post/${project?.project?.id}`}
             className="flexCenter md:hidden p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-fit"
-            onClick={() => console.log("Edit")}
           >
             <Image
               src="/assets/pencile.svg"
@@ -131,28 +166,23 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
           </button>
         </div>
       </section>
-
       <section className="mt-[52px]">
         <Image
-          src="/assets/post1.png"
+          src={`${project?.project?.image}`}
           className="object-cover"
           width={1064}
           height={798}
           alt="poster"
         />
       </section>
-
       <section className="flexCenter flex-col mt-[93px]">
         <h3 className="md:text-[47px] text-[30px] md:leading-[61px] leading-[35px] font-extrabold text-center">
-          Flexibble - Dribble Clone
+          {project?.project?.title}
         </h3>
         <p className="max-w-[750px] text-[21px] font-normal leading-[36px] text-center mt-[46px]">
-          Proud to share my latest exploration for Crypik - Crypto Wallet
-          Dashboard Do you have any thoughts or feedback? Please leave your
-          comment. Hope you guys enjoy it and press "L" if you like it ❤️
+          {project?.project?.description}
         </p>
       </section>
-
       <section className="flexCenter w-full gap-[30px] mt-[116px]">
         <span className="w-full h-[2px] bg-[#d7d7d7]" />
         <Link href="/profile/id" className="min-w-[82px] h-[82px]">
@@ -166,11 +196,10 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
         </Link>
         <span className="w-full h-[2px] bg-[#d7d7d7]" />
       </section>
-
       <section className="flex flex-col mt-[135px]">
         <div className="flexBetween">
           <p className="text-[21px] leading-[26px] font-semibold">
-            More by Clair
+            More by {project?.project?.createdBy}
           </p>
           <Link
             href="/"
@@ -181,13 +210,19 @@ const Project = ({ params: { id } }: { params: { id: string } }) => {
         </div>
 
         <div className="flexCenter max-md:flex-col gap-[19px] pt-6">
-          {/* <PostCard />
-          <PostCard />
-          <PostCard /> */}
+          {projectsByUser?.projectSearch?.edges?.map(
+            ({ node }: INodeParam, index: number) => (
+              <PostCard
+                key={`${node?.id}-${index}`}
+                id={node?.id}
+                image={node?.image || ""}
+              />
+            )
+          )}
         </div>
       </section>
     </Modal>
   );
 };
 
-export default Project;
+export default ProjectView;

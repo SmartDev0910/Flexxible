@@ -7,9 +7,10 @@ import { FC, useState } from "react";
 
 type Props = {
   id: string;
+  image: string;
 };
 
-const PostCard: FC<Props> = ({ id }) => {
+const PostCard: FC<Props> = ({ id, image }) => {
   const [likes, setLikes] = useState<number>(0);
   const [copied, setCopied] = useState<string>("");
   const { data: session } = useSession();
@@ -23,13 +24,20 @@ const PostCard: FC<Props> = ({ id }) => {
   return (
     <div className="flexCenter flex-col lg:basis-1/3 sm:basis-1/2 basis-full rounded-[14px]">
       <Link href={`post/${id}`} className="flexCenter relative">
-        <Image
-          src="/assets/post1.png"
-          width={414}
-          height={314}
-          className="w-full h-auto"
-          alt="post image"
-        />
+        {image.includes("http://") ||
+        image.includes("https://") ||
+        image == "" ? (
+          <Image
+            src={`${image}`}
+            width={414}
+            height={314}
+            className="w-full h-auto"
+            alt="post image"
+          />
+        ) : (
+          ""
+        )}
+
         <button
           type="button"
           className="flexCenter gap-[8px] absolute top-0 right-0 font-semibold text-sm leading-[17px] text-white p-[16px]"
@@ -49,7 +57,7 @@ const PostCard: FC<Props> = ({ id }) => {
             className="rounded-full"
             alt="profile image"
           />
-          <p>Ever</p>
+          <p>{session?.user?.name}</p>
           <p className="text-[8px] leading-[10px] font-semibold text-white bg-[#D9D9D9] px-[4px] py-[2px]">
             TEAM
           </p>

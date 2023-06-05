@@ -1,7 +1,7 @@
 const fetchHeader = {
   Accept: "application/json",
   "Content-Type": "application/json",
-  "x-api-key": `$process.env.GRAFBASE_API_KEY`,
+  "x-api-key": `${process.env.GRAFBASE_API_KEY}`,
 };
 
 export async function getAllProjects() {

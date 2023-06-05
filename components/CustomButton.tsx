@@ -6,12 +6,15 @@ type Props = {
   leftIcon?: string | null,
   rightIcon?: string | null,
   handleClick: MouseEventHandler,
+  submitting?: boolean | false,
+  type?: 'button' | 'submit',
 }
 
-const CustomButton: FC<Props> = ({ title, leftIcon, rightIcon, handleClick }) => (
+const CustomButton: FC<Props> = ({ title, leftIcon, rightIcon, handleClick, submitting, type }) => (
   <button
-    type="button"
-    className="flexCenter gap-[13px] p-[14px] text-white bg-primary-purple rounded-xl text-sm leading-[17px] font-medium max-md:w-full"
+    type={type || 'button'}
+    disabled={submitting || false}
+    className={`flexCenter gap-[13px] p-[14px] text-white ${submitting ? 'bg-black/50' : 'bg-primary-purple'} rounded-xl text-sm leading-[17px] font-medium max-md:w-full`}
     onClick={handleClick}
   >
     {leftIcon && (
