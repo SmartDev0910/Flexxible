@@ -15,6 +15,9 @@ const nextConfig = {
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || "",
     CLOUDINARY_API_SECRETS: process.env.CLOUDINARY_API_SECRETS || "",
   },
+  experimental: {
+    serverActions: true,
+  },
 };
 
 module.exports = nextConfig;

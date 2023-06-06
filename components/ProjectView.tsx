@@ -6,7 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, FC } from "react";
 import { INodeParam } from "@/utils/type";
-import { getProjectsByUser, DeleteProject } from "@/graphql/server";
+import { getProjectsByUser } from "@/graphql/server";
+import { deleteProject } from "@/utils/actions";
 
 type Props = {
   project: any;
@@ -32,11 +33,6 @@ const ProjectView: FC<Props> = ({ project, session }) => {
     fetchData();
   }, []);
 
-  const deleteProject = async () => {
-    await DeleteProject(project?.project?.id);
-    window.location.href = "/";
-  };
-
   return (
     <Modal>
       <section className="fixed max-md:hidden flex gap-[15px] flex-col right-10 top-22">
@@ -61,7 +57,7 @@ const ProjectView: FC<Props> = ({ project, session }) => {
           <button
             type="button"
             className="flexCenter p-[14px] text-[#3D3D4E] bg-primary-purple rounded-xl text-sm leading-[17px] font-medium w-full"
-            onClick={() => deleteProject()}
+            onClick={async () => await deleteProject(project?.project?.id)}
           >
             <Image
               src="/assets/trash.svg"
