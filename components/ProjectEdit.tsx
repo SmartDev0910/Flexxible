@@ -5,18 +5,17 @@ import Image from "next/image";
 
 import CustomButton from "@/components/CustomButton";
 import CategoryModal from "@/components/CategoryModal";
-import { useSession } from "next-auth/react";
 import { EditProject } from "@/graphql/server";
 
 type Props = {
   project: any;
+  session: any;
 };
 
-const EditPost: FC<Props> = ({ project }) => {
+const EditPost: FC<Props> = ({ project, session }) => {
   const [id, setId] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const { data: session } = useSession();
   const [url, setUrl] = useState<string>("");
   const [poster, setPoster] = useState<string | undefined>(undefined);
   const [category, setCategory] = useState<string>("Web Design");
@@ -55,7 +54,7 @@ const EditPost: FC<Props> = ({ project }) => {
   }, []);
 
   const editProject = async () => {
-    const username = session?.user?.name || "";
+    const username = session?.name || "";
     await EditProject(
       id,
       title,
@@ -88,8 +87,12 @@ const EditPost: FC<Props> = ({ project }) => {
             className="absolute z-30 w-full opacity-0 h-full cursor-pointer"
             onChange={(e) => addPoster(e)}
           />
-          {poster && (
+          {poster?.startsWith("http://") ||
+          poster?.startsWith("https://") ||
+          poster === "" ? (
             <Image src={poster} className="object-cover" fill alt="poster" />
+          ) : (
+            ""
           )}
         </div>
 

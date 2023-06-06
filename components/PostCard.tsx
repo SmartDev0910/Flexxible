@@ -24,8 +24,8 @@ const PostCard: FC<Props> = ({ id, image }) => {
   return (
     <div className="flexCenter flex-col lg:basis-1/3 sm:basis-1/2 basis-full rounded-[14px]">
       <Link href={`post/${id}`} className="flexCenter relative">
-        {image.includes("http://") ||
-        image.includes("https://") ||
+        {image.startsWith("http://") ||
+        image.startsWith("https://") ||
         image == "" ? (
           <Image
             src={`${image}`}

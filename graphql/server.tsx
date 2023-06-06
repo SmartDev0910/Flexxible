@@ -115,7 +115,7 @@ export async function getProjectsByUser(createdBy: string) {
 export async function FilterProjects(
   pageNum: number,
   query: string | null,
-  category: string
+  category: string | null
 ) {
   const gquery = `
 		query filterProjects($pageNum: Int!, $query: String, $category: String) {

@@ -7,14 +7,13 @@ import Link from "next/link";
 import { useEffect, useState, FC } from "react";
 import { INodeParam } from "@/utils/type";
 import { getProjectsByUser, DeleteProject } from "@/graphql/server";
-import { useSession } from "next-auth/react";
 
 type Props = {
   project: any;
+  session: any;
 };
 
-const ProjectView: FC<Props> = ({ project }) => {
-  const { data: session } = useSession();
+const ProjectView: FC<Props> = ({ project, session }) => {
   const [liked, setLiked] = useState(false);
   const [user, setUser] = useState("");
 
@@ -24,7 +23,7 @@ const ProjectView: FC<Props> = ({ project }) => {
 
   useEffect(() => {
     async function fetchData() {
-      const username = session?.user?.name || "";
+      const username = session?.name || "";
       setUser(username);
       const createdBy = project?.project?.createdBy;
       const resultByUser = await getProjectsByUser(createdBy);

@@ -1,16 +1,19 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import React, { ChangeEvent, SyntheticEvent, useState } from 'react'
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { ChangeEvent, SyntheticEvent, useState, FC } from "react";
 
-import { AddProject } from '@/graphql/server';
-import { UploadImage } from '@/utils/upload-image';
-import CategoryModal from './CategoryModal';
-import CustomButton from './CustomButton';
+import { AddProject } from "@/graphql/server";
+import { UploadImage } from "@/utils/upload-image";
+import CategoryModal from "./CategoryModal";
+import CustomButton from "./CustomButton";
 
-const PostForm = () => {
+type Props = {
+  session: any;
+};
+
+const PostForm: FC<Props> = ({ session }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [url, setUrl] = useState<string>("");
@@ -21,18 +24,24 @@ const PostForm = () => {
 
   const router = useRouter();
 
-  const { data: session } = useSession();
-
   const saveProject = async (event: SyntheticEvent) => {
     event.preventDefault();
-    const username = session?.user?.name || "";
+    const username = session?.name || "";
 
     try {
       setSubmitting(true);
       const image = await UploadImage(poster!);
-      await AddProject(title, description, image.url, url, githubUrl, username, category);
+      await AddProject(
+        title,
+        description,
+        image.url,
+        url,
+        githubUrl,
+        username,
+        category
+      );
 
-      router.push('/');
+      router.push("/");
     } catch (err) {
       alert(err);
     } finally {
@@ -58,7 +67,6 @@ const PostForm = () => {
       };
       fileReader.readAsDataURL(inputElement.files[0]);
     }
-
   };
 
   return (
@@ -139,15 +147,15 @@ const PostForm = () => {
 
       <div className="flexStart w-full">
         <CustomButton
-          title={submitting ? 'Creating' : 'Create'}
+          title={submitting ? "Creating" : "Create"}
           type="submit"
-          leftIcon={submitting ? '' : '/assets/plus.svg'}
+          leftIcon={submitting ? "" : "/assets/plus.svg"}
           submitting={submitting}
           handleClick={saveProject}
         />
       </div>
     </form>
-  )
-}
+  );
+};
 
 export default PostForm;

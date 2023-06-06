@@ -1,9 +1,11 @@
 import ProjectEdit from "@/components/ProjectEdit";
 import { getProjectsById } from "@/graphql/server";
+import { getCurrentUser } from "@/utils/session";
 
 const EditPost = async ({ params: { id } }: { params: { id: string } }) => {
   const result = await getProjectsById(id);
-  return <ProjectEdit project={result} />;
+  const session = await getCurrentUser();
+  return <ProjectEdit project={result} session={session} />;
 };
 
 export default EditPost;
