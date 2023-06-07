@@ -1,10 +1,15 @@
-import HomeFilter from "@/components/HomeFilter";
 import { INodeParam } from "@/utils/type";
 import { FilterProjects } from "@/graphql/server";
 import PostCard from "@/components/PostCard";
+import HomeFilter from "@/components/HomeFilter";
 
-const Home = async () => {
-  const result = await FilterProjects(100, null, "Web Design");
+const ProjectList = async ({
+  params: { param },
+}: {
+  params: { param: string };
+}) => {
+  const result = await FilterProjects(100, null, param);
+
   return (
     <section className="flexStart flex-col paddings">
       <HomeFilter />
@@ -23,4 +28,4 @@ const Home = async () => {
   );
 };
 
-export default Home;
+export default ProjectList;

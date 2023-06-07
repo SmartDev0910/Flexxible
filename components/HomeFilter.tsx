@@ -26,7 +26,7 @@ const HomeFilter = () => {
 
       <ul className="flex gap-[7px] overflow-auto">
         {HomeFilters.map((filter) => (
-          <Link href={`/?category=${filter}`} key={filter}>
+          <Link href={`/${filter}`} key={filter}>
             <button
               type="button"
               onClick={() => setTag(filter)}

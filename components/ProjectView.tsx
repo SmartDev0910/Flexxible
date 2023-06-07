@@ -4,40 +4,25 @@ import Modal from "@/components/Modal";
 import PostCard from "@/components/PostCard";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, FC } from "react";
+import { useState, FC } from "react";
 import { INodeParam } from "@/utils/type";
-import { getProjectsByUser } from "@/graphql/server";
 import { deleteProject } from "@/utils/actions";
 
 type Props = {
   project: any;
   session: any;
+  relatedProjects: any;
 };
 
-const ProjectView: FC<Props> = ({ project, session }) => {
+const ProjectView: FC<Props> = ({ project, session, relatedProjects }) => {
+  const username = session?.name || "";
   const [liked, setLiked] = useState(false);
-  const [user, setUser] = useState("");
-
-  const [projectsByUser, setProjectsByUser] = useState({
-    projectSearch: { edges: [] },
-  });
-
-  useEffect(() => {
-    async function fetchData() {
-      const username = session?.name || "";
-      setUser(username);
-      const createdBy = project?.project?.createdBy;
-      const resultByUser = await getProjectsByUser(createdBy);
-      setProjectsByUser(resultByUser);
-    }
-    fetchData();
-  }, []);
 
   return (
     <Modal>
       <section className="fixed max-md:hidden flex gap-[15px] flex-col right-10 top-22">
         <Image src="/assets/profile.png" width={50} height={50} alt="profile" />
-        {user === project?.project?.createdBy ? (
+        {username === project?.project?.createdBy ? (
           <Link
             href={`/edit-post/${project?.project?.id}`}
             className="flexCenter p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
@@ -53,7 +38,7 @@ const ProjectView: FC<Props> = ({ project, session }) => {
         ) : (
           ""
         )}
-        {user === project?.project?.createdBy ? (
+        {username === project?.project?.createdBy ? (
           <button
             type="button"
             className="flexCenter p-[14px] text-[#3D3D4E] bg-primary-purple rounded-xl text-sm leading-[17px] font-medium w-full"
@@ -205,7 +190,7 @@ const ProjectView: FC<Props> = ({ project, session }) => {
         </div>
 
         <div className="flexCenter max-md:flex-col gap-[19px] pt-6">
-          {projectsByUser?.projectSearch?.edges?.map(
+          {relatedProjects?.projectSearch?.edges?.map(
             ({ node }: INodeParam, index: number) => (
               <PostCard
                 key={`${node?.id}-${index}`}
