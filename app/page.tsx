@@ -1,10 +1,11 @@
 import HomeFilter from "@/components/HomeFilter";
-import { INodeParam } from "@/utils/type";
+import { INodeParam, HomeProps } from "@/utils/type";
 import { FilterProjects } from "@/graphql/server";
 import PostCard from "@/components/PostCard";
 
-const Home = async () => {
-  const result = await FilterProjects(100, null, "Web Design");
+const Home = async ({ searchParams }: HomeProps) => {
+  let category = searchParams.category || "Web Design";
+  const result = await FilterProjects(100, null, category);
   return (
     <section className="flexStart flex-col paddings">
       <HomeFilter />

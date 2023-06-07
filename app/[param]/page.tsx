@@ -9,7 +9,7 @@ const ProjectList = async ({
   params: { param: string };
 }) => {
   const result = await FilterProjects(100, null, param);
-
+  console.log("+++++++++++++++++++++", result);
   return (
     <section className="flexStart flex-col paddings">
       <HomeFilter />

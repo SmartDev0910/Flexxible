@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { HomeFilters } from "@/constants/filters";
+import { useRouter } from "next/navigation";
+import { updateSearchParams } from "@/utils";
 
 const HomeFilter = () => {
-  const [tag, setTag] = useState("");
+  const router = useRouter();
+  const [tag, setTag] = useState("Web Design");
+
+  useEffect(() => {
+    const newPathName = updateSearchParams("category", tag);
+    router.push(newPathName);
+  }, [tag]);
 
   return (
     <div className="flexBetween w-full gap-5 flex-wrap">
@@ -26,17 +33,16 @@ const HomeFilter = () => {
 
       <ul className="flex gap-[7px] overflow-auto">
         {HomeFilters.map((filter) => (
-          <Link href={`/${filter}`} key={filter}>
-            <button
-              type="button"
-              onClick={() => setTag(filter)}
-              className={`${
-                tag === filter ? "bg-[#F3F3F4] font-medium" : "font-normal"
-              } px-[14px] py-[12px] rounded-lg`}
-            >
-              {filter}
-            </button>
-          </Link>
+          <button
+            key={filter}
+            type="button"
+            onClick={() => setTag(filter)}
+            className={`${
+              tag === filter ? "bg-[#F3F3F4] font-medium" : "font-normal"
+            } px-[14px] py-[12px] rounded-lg`}
+          >
+            {filter}
+          </button>
         ))}
       </ul>
 

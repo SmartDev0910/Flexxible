@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, SyntheticEvent, useState, FC } from "react";
-
-import { AddProject } from "@/graphql/server";
+import { addProject } from "@/utils/actions";
 import { UploadImage } from "@/utils/upload-image";
 import CategoryModal from "./CategoryModal";
 import CustomButton from "./CustomButton";
@@ -31,7 +30,7 @@ const PostForm: FC<Props> = ({ session }) => {
     try {
       setSubmitting(true);
       const image = await UploadImage(poster!);
-      await AddProject(
+      await addProject(
         title,
         description,
         image.url,
