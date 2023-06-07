@@ -1,6 +1,6 @@
 "use server";
 
-import { DeleteProject, EditProject } from "@/graphql/server";
+import { DeleteProject, EditProject, LikeProject } from "@/graphql/server";
 
 export const deleteProject = async (id: string) => {
   await DeleteProject(id);
@@ -26,4 +26,8 @@ export const editProject = async (
     username,
     category
   );
+};
+
+export const likeProject = async (id: string, likes: number) => {
+  await LikeProject(id, likes);
 };

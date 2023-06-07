@@ -16,7 +16,7 @@ export async function getAllProjects() {
 						image
 						liveSiteUrl
 						githubUrl
-						upvote
+						likes
 						category
 					}
 				}
@@ -47,7 +47,7 @@ export async function getProjectsById(id: string) {
 				image
 				liveSiteUrl
 				githubUrl
-				upvote
+				likes
 				createdBy
 				category
 			}
@@ -84,7 +84,7 @@ export async function getProjectsByUser(createdBy: string) {
 						githubUrl
 						liveSiteUrl
 						image
-						upvote
+						likes
 						createdBy
 						category
 						updatedAt
@@ -128,7 +128,7 @@ export async function FilterProjects(
 						githubUrl
 						liveSiteUrl
 						image
-						upvote
+						likes
 						createdBy
 						category
 						updatedAt
@@ -267,7 +267,6 @@ export async function EditProject(
 							liveSiteUrl
 							title
 							updatedAt
-							upvote
 							createdBy
 							category
 						}
@@ -306,6 +305,31 @@ export async function DeleteProject(id: string) {
 			`,
       variables: {
         id: id,
+      },
+    }),
+  });
+
+  const { data } = await res.json();
+
+  return data;
+}
+
+export async function LikeProject(id: string, likes: number) {
+  const res = await fetch(`${process.env.GRAFBASE_API_URL}`, {
+    method: "POST",
+    headers: fetchHeader,
+    body: JSON.stringify({
+      query: `
+				  mutation LikeProject($id: ID!, $likes: Int) {
+					  projectUpdate(by: { id: $id } input {likes: {set: $likes}}) {
+						id  
+						likes
+					  }
+				  }
+			  `,
+      variables: {
+        id: id,
+        likes: likes,
       },
     }),
   });

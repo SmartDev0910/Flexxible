@@ -5,7 +5,7 @@ type Project @model @search {
   image: String!
   liveSiteUrl: String!
   githubUrl: String
-  upvote: Boolean
+  likes: Int @default(value: 0)
   createdBy: String!
   category: String
 }
