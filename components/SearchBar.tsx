@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Combobox, Transition } from "@headlessui/react";
 import { Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { debounce } from "lodash";
 
 const tags = [
   { id: 1, name: "Animation" },
@@ -31,9 +32,9 @@ const SearchBar = () => {
 
   useEffect(() => {
     updateSearchParams(search, selected);
-  }, [search]);
+  }, [search, selected]);
 
-  const updateSearchParams = (search: string, selected: any) => {
+  const updateSearchParams = debounce((search: string, selected: any) => {
     // Create a new URLSearchParams object using the current URL search parameters
     const searchParams = new URLSearchParams(window.location.search);
 
@@ -56,7 +57,7 @@ const SearchBar = () => {
     }?${searchParams.toString()}`;
 
     router.push(newPathname);
-  };
+  }, 500);
 
   return (
     <form className="flexCenter max-sm:hidden max-w-[277px] relative">
