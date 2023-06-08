@@ -14,6 +14,7 @@ export interface INodeParam {
 
 export interface FilterProps {
   category?: string | null;
+  search?: string | null;
 }
 
 export interface HomeProps {

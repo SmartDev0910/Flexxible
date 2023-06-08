@@ -5,7 +5,8 @@ import PostCard from "@/components/PostCard";
 
 const Home = async ({ searchParams }: HomeProps) => {
   let category = searchParams.category || "Web Design";
-  const result = await FilterProjects(100, null, category);
+  let search = searchParams.search || null;
+  const result = await FilterProjects(100, search, category);
   return (
     <section className="flexStart flex-col paddings">
       <HomeFilter />
