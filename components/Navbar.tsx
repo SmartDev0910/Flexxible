@@ -1,15 +1,26 @@
-'use client';
+/* eslint-disable react/jsx-no-useless-fragment */
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { signIn, useSession } from 'next-auth/react';
+"use client";
 
-import SearchBar from './SearchBar';
-import CustomButton from './CustomButton';
-import ProfileModal from './ProfileModal';
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { getProviders, signIn, useSession } from "next-auth/react";
+
+import CustomButton from "./CustomButton";
+import ProfileModal from "./ProfileModal";
 
 const Navbar = () => {
   const { data: session } = useSession();
+  // eslint-disable-next-line no-undef
+  const [providers, setProviders] = useState<any>(null);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
+  }, []);
 
   return (
     <nav className="flexBetween py-[18px] px-[30px] border-b-[1px] border-[#EBEAEA]">
@@ -24,17 +35,25 @@ const Navbar = () => {
           />
         </Link>
         <ul className="xl:flex hidden text-small gap-[27px]">
-          <Link href="/">Inspiration</Link>
-          <Link href="/">Find Work</Link>
-          <Link href="/">Learn Design</Link>
-          <Link href="/">Go Pro</Link>
-          <Link href="/">Hire Designers</Link>
+          <Link href="/" key="Inspiration">
+            Inspiration
+          </Link>
+          <Link href="/" key="Find Work">
+            Find Work
+          </Link>
+          <Link href="/" key="Learn Design">
+            Learn Design
+          </Link>
+          <Link href="/" key="Go Pro">
+            Go Pro
+          </Link>
+          <Link href="/" key="Hire Designers">
+            Hire Designers
+          </Link>
         </ul>
       </div>
 
       <div className="flexCenter gap-[17px]">
-        <Link href="/" className="text-center max-md:max-w-min text-primary-purple text-small">Apply Now</Link>
-        <SearchBar />
         {session?.user ? (
           <>
             <ProfileModal />
@@ -52,7 +71,16 @@ const Navbar = () => {
             </Link>
           </>
         ) : (
-          <CustomButton title="Sign in" handleClick={() => signIn()} />
+          <>
+            {providers &&
+              Object.values(providers).map((provider: any, index) => (
+                <CustomButton
+                  key={index}
+                  title="Sign in"
+                  handleClick={() => signIn(provider?.id)}
+                />
+              ))}
+          </>
         )}
       </div>
     </nav>

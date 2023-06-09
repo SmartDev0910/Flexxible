@@ -1,4 +1,5 @@
 export const HomeFilters = [
+  "All",
   "Discover",
   "Animation",
   "Branding",

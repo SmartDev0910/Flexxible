@@ -23,15 +23,6 @@ const ProfileHero = ({ user }) => {
         <p className="md:text-[47px] text-[30px] md:leading-[61px] leading-[32px] font-extrabold md:mt-[40px] mt-5 lg:max-w-[444px]">
           I’m Software Engineer at JSM 👋
         </p>
-        <div className="flex items-center justify-start md:mt-[44px] mt-8 gap-x-[15px] text-[18px] opacity-50 leading-[22px] font-bold">
-          ON TEAMS
-          <Image
-            src="/assets/team.svg"
-            width={50}
-            height={50}
-            alt="team logo"
-          />
-        </div>
         <div className="flex mt-[30px] gap-5">
           <ProfileButtons />
         </div>

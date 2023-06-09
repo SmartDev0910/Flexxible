@@ -1,6 +1,6 @@
-import Modal from "@/components/Modal";
-import PostForm from "@/components/PostForm";
-import { getCurrentUser } from "@/utils/session";
+import Modal from '@/components/Modal';
+import PostForm from '@/components/PostForm';
+import { getCurrentUser } from '@/utils/session';
 
 const CreateProjectModal = async () => {
   const session = await getCurrentUser();

@@ -5,8 +5,8 @@ import Link from 'next/link';
 import ProfileEditModal from '@/components/ProfileEditModal';
 
 const ProfileAbout = () => {
-  const [github, setGithub] = useState<string | null>(null);
-  const [linkedIn, setLinkedIn] = useState<string | null>(null);
+  const [github] = useState(null);
+  const [linkedIn] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
 
   return (

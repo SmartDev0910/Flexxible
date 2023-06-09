@@ -9,3 +9,12 @@ type Project @model @search {
   createdBy: String!
   category: String
 }
+
+type User @model @search {
+  name: String!
+  email: String! @unique
+  image: String!
+  description: String
+  githubUrl: String
+  linkedinUrl: String
+}

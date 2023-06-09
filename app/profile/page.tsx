@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
-import { UserFilters } from '@/constants/userFilters';
-import ProfileHero from '@/components/ProfileHero';
-import ProfileAbout from '@/components/ProfileAbout';
-import ProfileProjects from '@/components/ProfileProjects';
+import { UserFilters } from "@/constants/userFilters";
+import ProfileHero from "@/components/ProfileHero";
+import ProfileAbout from "@/components/ProfileAbout";
+import ProfileProjects from "@/components/ProfileProjects";
 
 const User = () => {
   // eslint-disable-next-line no-undef
-  const [filter, setFilter] = useState<string>('Work');
+  const [filter, setFilter] = useState<string>("Work");
 
   const { data: session } = useSession();
 
@@ -27,13 +27,17 @@ const User = () => {
                 key={userFilter}
                 type="button"
                 onClick={() => setFilter(userFilter)}
-                className={`${filter !== userFilter && 'opacity-60'}`}
+                className={`${filter !== userFilter && "opacity-60"}`}
               >
                 {userFilter}
               </button>
             ))}
           </ul>
-          <button type="button" onClick={() => console.log('Following')} className="flexCenter gap-[11px] text-small py-3 px-[14px] mt-4 opacity-60 border-[1px] border-[#E4E4E4] rounded-lg max-md:w-full">
+          <button
+            type="button"
+            onClick={() => console.log("Following")}
+            className="flexCenter gap-[11px] text-small py-3 px-[14px] mt-4 opacity-60 border-[1px] border-[#E4E4E4] rounded-lg max-md:w-full"
+          >
             Recent Shorts
             <Image
               src="/assets/arrow-down.svg"
@@ -44,9 +48,9 @@ const User = () => {
           </button>
         </div>
 
-        {filter === 'Work' && <ProfileProjects />}
-        {filter === 'Projects' && <ProfileProjects />}
-        {filter === 'About' && <ProfileAbout />}
+        {filter === "Work" && <ProfileProjects />}
+        {filter === "Projects" && <ProfileProjects />}
+        {filter === "About" && <ProfileAbout />}
       </section>
     </main>
   );

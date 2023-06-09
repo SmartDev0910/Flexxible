@@ -9,36 +9,50 @@ import { INodeParam } from "@/utils/type";
 import { deleteProject } from "@/utils/actions";
 
 type Props = {
+  user: any;
   project: any;
   session: any;
   relatedProjects: any;
 };
 
-const ProjectView: FC<Props> = ({ project, session, relatedProjects }) => {
-  const username = session?.name || "";
+const ProjectView: FC<Props> = ({
+  user,
+  project,
+  session,
+  relatedProjects,
+}) => {
+  const useremail = session?.email || "";
   const [liked, setLiked] = useState(false);
 
   return (
     <Modal>
       <section className="fixed max-md:hidden flex gap-[15px] flex-col right-10 top-22">
-        <Image src="/assets/profile.png" width={50} height={50} alt="profile" />
-        {username === project?.project?.createdBy ? (
-          <Link
-            href={`/edit-post/${project?.project?.id}`}
-            className="flexCenter p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
-          >
-            <Image
-              src="/assets/pencile.svg"
-              className="min-w-[15px]"
-              width={14}
-              height={14}
-              alt="save"
-            />
-          </Link>
+        {useremail === user?.email ? (
+          <>
+            {(user?.image.startsWith("http://") ||
+              user?.image.startsWith("https://")) &&
+            user?.image !== "" ? (
+              <Image src={user?.image} width={50} height={50} alt="profile" />
+            ) : (
+              ""
+            )}
+            <Link
+              href={`/edit-post/${project?.project?.id}`}
+              className="flexCenter p-[14px] text-[#3D3D4E] bg-[#E2E5F1] rounded-xl text-sm leading-[17px] font-medium w-full"
+            >
+              <Image
+                src="/assets/pencile.svg"
+                className="min-w-[15px]"
+                width={14}
+                height={14}
+                alt="save"
+              />
+            </Link>
+          </>
         ) : (
           ""
         )}
-        {username === project?.project?.createdBy ? (
+        {useremail === user?.email ? (
           <button
             type="button"
             className="flexCenter p-[14px] text-[#3D3D4E] bg-primary-purple rounded-xl text-sm leading-[17px] font-medium w-full"
@@ -56,23 +70,29 @@ const ProjectView: FC<Props> = ({ project, session, relatedProjects }) => {
           ""
         )}
       </section>
+
       <section className="flexCenter max-lg:flex-col gap-x-[299px] gap-y-[30px] max-lg:w-full">
         <div className="flexStart gap-[20px] w-full">
-          <Image
-            src="/assets/profile.png"
-            width={50}
-            height={50}
-            alt="profile"
-            className="rounded-full"
-          />
+          {(user?.image.startsWith("http://") ||
+            user?.image.startsWith("https://")) &&
+          user?.image !== "" ? (
+            <Image
+              src={user?.image}
+              width={50}
+              height={50}
+              alt="profile"
+              className="rounded-full"
+            />
+          ) : (
+            ""
+          )}
           <div className="flexStart flex-col gap-y-[10px]">
-            <p className="text-[18px] leading-[22px] font-semibold">
+            <p className="self-start text-[18px] leading-[22px] font-semibold">
               {project?.project?.title}
             </p>
             <div className="flex text-[14px] leading-[17px] font-normal gap-[9px] w-full">
               <Link href="/profile/id">
-                {project?.project?.createdBy}{" "}
-                <span className="text-[#4d4a4a]">for</span> JSM
+                {user?.name} <span className="text-[#4d4a4a]">for</span> JSM
               </Link>
               <Image src="/assets/dot.svg" width={4} height={4} alt="dot" />
               <button type="button">Follow</button>
@@ -149,7 +169,7 @@ const ProjectView: FC<Props> = ({ project, session, relatedProjects }) => {
       <section className="mt-[52px]">
         <Image
           src={`${project?.project?.image}`}
-          className="object-cover"
+          className="object-cover rounded-[19px]"
           width={1064}
           height={798}
           alt="poster"
@@ -166,20 +186,26 @@ const ProjectView: FC<Props> = ({ project, session, relatedProjects }) => {
       <section className="flexCenter w-full gap-[30px] mt-[116px]">
         <span className="w-full h-[2px] bg-[#d7d7d7]" />
         <Link href="/profile/id" className="min-w-[82px] h-[82px]">
-          <Image
-            src="/assets/profile.png"
-            className="rounded-full"
-            width={82}
-            height={82}
-            alt="profile image"
-          />
+          {(user?.image.startsWith("http://") ||
+            user?.image.startsWith("https://")) &&
+          user?.image !== "" ? (
+            <Image
+              src={user?.image}
+              className="rounded-full"
+              width={82}
+              height={82}
+              alt="profile image"
+            />
+          ) : (
+            ""
+          )}
         </Link>
         <span className="w-full h-[2px] bg-[#d7d7d7]" />
       </section>
-      <section className="flex flex-col mt-[135px]">
+      <section className="flex flex-col mt-[135px] w-full">
         <div className="flexBetween">
           <p className="text-[21px] leading-[26px] font-semibold">
-            More by {project?.project?.createdBy}
+            More by {user?.name}
           </p>
           <Link
             href="/"
@@ -189,13 +215,15 @@ const ProjectView: FC<Props> = ({ project, session, relatedProjects }) => {
           </Link>
         </div>
 
-        <div className="flexCenter max-md:flex-col gap-[19px] pt-6">
+        <div className="grid lg:grid-cols-3 grid-cols-1 gap-[19px] pt-6 min-h-full min-w-full">
           {relatedProjects?.projectSearch?.edges?.map(
             ({ node }: INodeParam, index: number) => (
               <PostCard
                 key={`${node?.id}-${index}`}
                 id={node?.id}
                 image={node?.image || ""}
+                title={node?.title || ""}
+                user={user}
               />
             )
           )}

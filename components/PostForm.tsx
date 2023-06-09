@@ -7,6 +7,7 @@ import { addProject } from "@/utils/actions";
 import { UploadImage } from "@/utils/upload-image";
 import CategoryModal from "./CategoryModal";
 import CustomButton from "./CustomButton";
+import FormComponent from "./FormComponent";
 
 type Props = {
   session: any;
@@ -25,7 +26,7 @@ const PostForm: FC<Props> = ({ session }) => {
 
   const saveProject = async (event: SyntheticEvent) => {
     event.preventDefault();
-    const username = session?.name || "";
+    const email = session?.email || "";
 
     try {
       setSubmitting(true);
@@ -36,7 +37,7 @@ const PostForm: FC<Props> = ({ session }) => {
         image.url,
         url,
         githubUrl,
-        username,
+        email,
         category
       );
 
@@ -61,9 +62,10 @@ const PostForm: FC<Props> = ({ session }) => {
         return;
       }
 
-      fileReader.onload = (event) => {
-        setPoster(event.target!.result?.toString());
+      fileReader.onload = (e: any) => {
+        setPoster(e.target?.result);
       };
+
       fileReader.readAsDataURL(inputElement.files[0]);
     }
   };
@@ -73,7 +75,7 @@ const PostForm: FC<Props> = ({ session }) => {
       <div className="flexStart w-full lg:min-h-[400px] min-h-[200px] relative">
         <label
           htmlFor="poster"
-          className="flexCenter text-center w-full h-full p-20 text-[#3D3D4E] border-2 border-[#D9D9D9] border-dashed"
+          className="flexCenter z-10 text-center w-full h-full p-20 text-[#3D3D4E] border-2 border-[#D9D9D9] border-dashed"
         >
           Choose a poster for your project
         </label>
@@ -85,62 +87,25 @@ const PostForm: FC<Props> = ({ session }) => {
           onChange={(e) => addPoster(e)}
         />
         {poster && (
-          <Image src={poster} className="object-cover" fill alt="poster" />
+          <Image src={poster} className="object-cover z-20" fill alt="poster" />
         )}
       </div>
 
-      <div className="flexStart flex-col w-full gap-[25px]">
-        <label htmlFor="title" className="w-full text-[#3d3d4e]">
-          Title
-        </label>
-        <input
-          type="text"
-          placeholder="Flexibble - Dribble Clone"
-          required
-          value={title}
-          className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div className="flexStart flex-col w-full gap-[25px]">
-        <label htmlFor="title" className="w-full text-[#3d3d4e]">
-          Description
-        </label>
-        <textarea
-          placeholder="A dribble clone web application made using..."
-          value={description}
-          className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </div>
+      <FormComponent title="Title" state={title} setState={setTitle} />
 
-      <div className="flexStart flex-col w-full gap-[25px]">
-        <label htmlFor="title" className="w-full text-[#3d3d4e]">
-          WebSite URL
-        </label>
-        <input
-          type="url"
-          placeholder="https://flexibble.com"
-          required
-          value={url}
-          className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
-          onChange={(e) => setUrl(e.target.value)}
-        />
-      </div>
+      <FormComponent
+        title="Description"
+        state={description}
+        setState={setDescription}
+      />
 
-      <div className="flexStart flex-col w-full gap-[25px]">
-        <label htmlFor="title" className="w-full text-[#3d3d4e]">
-          GitHub URL
-        </label>
-        <input
-          type="url"
-          placeholder="https://github.com/user/flexibble.com"
-          required
-          value={githubUrl}
-          className="self-start w-full outline-0 bg-[#F1F4F5] rounded-xl p-[14px]"
-          onChange={(e) => setGithubUrl(e.target.value)}
-        />
-      </div>
+      <FormComponent title="Website URL" state={url} setState={setUrl} />
+
+      <FormComponent
+        title="GitHub URL"
+        state={githubUrl}
+        setState={setGithubUrl}
+      />
 
       <CategoryModal category={category} setCategory={setCategory} />
 

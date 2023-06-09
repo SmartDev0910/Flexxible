@@ -1,36 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import { HomeFilters } from "@/constants/filters";
 import { useRouter } from "next/navigation";
+
+import { HomeFilters } from "@/constants/filters";
 import { updateSearchParams } from "@/utils";
+import SearchBar from "./SearchBar";
 
 const HomeFilter = () => {
   const router = useRouter();
-  const [tag, setTag] = useState("Web Design");
+  const [tag, setTag] = useState("All");
 
   useEffect(() => {
-    const newPathName = updateSearchParams("category", tag);
-    router.push(newPathName);
+    if (tag === "All") {
+      router.push("/");
+    } else {
+      const newPathName = updateSearchParams("category", tag);
+      router.push(newPathName);
+    }
   }, [tag]);
 
   return (
     <div className="flexBetween w-full gap-5 flex-wrap">
-      <button
-        type="button"
-        onClick={() => console.log("Following")}
-        className="flexCenter gap-[20px] text-small py-3 px-[14px] border-[1px] border-[#E4E4E4] rounded-lg max-lg:w-full"
-      >
-        Following
-        <Image
-          src="/assets/arrow-down.svg"
-          width={10}
-          height={5}
-          alt="arrow down"
-        />
-      </button>
-
       <ul className="flex gap-[7px] overflow-auto">
         {HomeFilters.map((filter) => (
           <button
@@ -46,14 +37,7 @@ const HomeFilter = () => {
         ))}
       </ul>
 
-      <button
-        type="button"
-        onClick={() => console.log("Filters")}
-        className="flexCenter gap-[20px] text-small py-3 px-[14px] border-[1px] border-[#E4E4E4] rounded-lg max-lg:w-full"
-      >
-        <Image src="/assets/filters.svg" width={10} height={5} alt="filters" />
-        Filters
-      </button>
+      <SearchBar />
     </div>
   );
 };

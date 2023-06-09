@@ -13,7 +13,7 @@ type Props = {
 };
 
 const EditPost: FC<Props> = ({ project, session }) => {
-  const username = session?.name || "";
+  const useremail = session?.email || "";
   const [state, setState] = useState({
     id: project?.project?.id || "",
     title: project?.project?.title || "",
@@ -76,9 +76,9 @@ const EditPost: FC<Props> = ({ project, session }) => {
             className="absolute z-30 w-full opacity-0 h-full cursor-pointer"
             onChange={(e) => addPoster(e)}
           />
-          {state.poster?.startsWith("http://") ||
-          state.poster?.startsWith("https://") ||
-          state.poster === "" ? (
+          {(state.poster?.startsWith("http://") ||
+            state.poster?.startsWith("https://")) &&
+          state.poster !== "" ? (
             <Image
               src={state.poster}
               className="object-cover"
@@ -142,7 +142,7 @@ const EditPost: FC<Props> = ({ project, session }) => {
                 state.poster,
                 state.url,
                 "githubUrl",
-                username,
+                useremail,
                 category
               )
             }

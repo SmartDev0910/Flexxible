@@ -1,3 +1,17 @@
+import {
+  GET_ALL_USER,
+  GET_PROJECT_BY_USER,
+  GET_PROJECT_BY_ID,
+  FILTER_PROJECTS,
+  ADD_PROJECT,
+  EDIT_PROJECT,
+  DELETE_PROJECT,
+  LIKE_PROJECT,
+  ADD_USER,
+  GET_USER_BY_EMAIL,
+  EDIT_USER,
+} from "./query";
+
 const fetchHeader = {
   Accept: "application/json",
   "Content-Type": "application/json",
@@ -5,26 +19,7 @@ const fetchHeader = {
 };
 
 export async function getAllProjects() {
-  const query = `
-		query getProjects {
-			projectCollection(first: 10) {
-				edges {
-					node {
-						id
-						title
-						description
-						image
-						liveSiteUrl
-						githubUrl
-						likes
-						category
-					}
-				}
-			}
-		}
-	`;
-
-  const encodedQuery = encodeURIComponent(query);
+  const encodedQuery = encodeURIComponent(GET_ALL_USER);
   const url = `${process.env.GRAFBASE_API_URL}?query=${encodedQuery}`;
 
   const res = await fetch(url, {
@@ -38,27 +33,11 @@ export async function getAllProjects() {
 }
 
 export async function getProjectsById(id: string) {
-  const query = `
-		query getProjectById($id: ID!) {
-			project(by: { id: $id }) {
-				id
-				title
-				description
-				image
-				liveSiteUrl
-				githubUrl
-				likes
-				createdBy
-				category
-			}
-		}
-	`;
-
   const variables = {
     id: id,
   };
 
-  const encodedQuery = encodeURIComponent(query);
+  const encodedQuery = encodeURIComponent(GET_PROJECT_BY_ID);
   const encodedVariables = encodeURIComponent(JSON.stringify(variables));
   const url = `${process.env.GRAFBASE_API_URL}?query=${encodedQuery}&variables=${encodedVariables}`;
 
@@ -73,32 +52,11 @@ export async function getProjectsById(id: string) {
 }
 
 export async function getProjectsByUser(createdBy: string) {
-  const query = `
-		query getProjectsByUser($createdBy: String!) {
-			projectSearch(first: 3, filter: { createdBy: { eq: $createdBy } }) {
-				edges {
-					node {
-						id
-						title
-						description
-						githubUrl
-						liveSiteUrl
-						image
-						likes
-						createdBy
-						category
-						updatedAt
-					}
-				}
-			}
-		}
-	`;
-
   const variables = {
     createdBy: createdBy,
   };
 
-  const encodedQuery = encodeURIComponent(query);
+  const encodedQuery = encodeURIComponent(GET_PROJECT_BY_USER);
   const encodedVariables = encodeURIComponent(JSON.stringify(variables));
   const url = `${process.env.GRAFBASE_API_URL}?query=${encodedQuery}&variables=${encodedVariables}`;
 
@@ -115,36 +73,15 @@ export async function getProjectsByUser(createdBy: string) {
 export async function FilterProjects(
   pageNum: number,
   query: string | null,
-  category: string
+  category: string | null
 ) {
-  const gquery = `
-		query filterProjects($pageNum: Int!, $query: String, $category: String) {
-			projectSearch(first: $pageNum, query: $query, filter: { category: { eq: $category } }) {
-				edges {
-					node {
-						id
-						title
-						description
-						githubUrl
-						liveSiteUrl
-						image
-						likes
-						createdBy
-						category
-						updatedAt
-					}
-				}
-			}
-		}
-	`;
-
   const variables = {
     pageNum: pageNum,
     query: query,
     category: category,
   };
 
-  const encodedQuery = encodeURIComponent(gquery);
+  const encodedQuery = encodeURIComponent(FILTER_PROJECTS);
   const encodedVariables = encodeURIComponent(JSON.stringify(variables));
   const url = `${process.env.GRAFBASE_API_URL}?query=${encodedQuery}&variables=${encodedVariables}`;
 
@@ -172,39 +109,7 @@ export async function AddProject(
     method: "POST",
     headers: fetchHeader,
     body: JSON.stringify({
-      query: `
-				mutation AddProject(
-					$title: String!
-					$description: String!
-					$image: String!
-					$liveSiteUrl: String!
-					$githubUrl: String
-					$createdBy: String!
-					$category: String!
-				) {
-					projectCreate(
-						input: {
-							title: $title
-							description: $description
-							image: $image
-							liveSiteUrl: $liveSiteUrl
-							githubUrl: $githubUrl
-							createdBy: $createdBy
-							category: $category
-						}
-					) {
-						project {
-							title
-							description
-							image
-							liveSiteUrl
-							githubUrl
-							createdBy
-							category
-						}
-					}
-				}
-			`,
+      query: ADD_PROJECT,
       variables: {
         title: title,
         description: description,
@@ -236,44 +141,7 @@ export async function EditProject(
     method: "POST",
     headers: fetchHeader,
     body: JSON.stringify({
-      query: `
-				mutation EditProject(
-					$id: ID!
-					$title: String!
-					$description: String!
-					$image: String!
-					$liveSiteUrl: String!
-					$githubUrl: String
-					$createdBy: String!
-					$category: String!
-				) {
-					projectUpdate(
-						by: { id: $id }
-						input: {
-							title: $title
-							description: $description
-							image: $image
-							liveSiteUrl: $liveSiteUrl
-							githubUrl: $githubUrl
-							createdBy: $createdBy
-							category: $category
-						}
-					) {
-						project {
-							createdAt
-							description
-							githubUrl
-							id
-							image
-							liveSiteUrl
-							title
-							updatedAt
-							createdBy
-							category
-						}
-					}
-				}
-			`,
+      query: EDIT_PROJECT,
       variables: {
         id: id,
         title: title,
@@ -297,13 +165,7 @@ export async function DeleteProject(id: string) {
     method: "POST",
     headers: fetchHeader,
     body: JSON.stringify({
-      query: `
-				mutation DeleteProjectById($id: ID!) {
-					projectDelete(by: { id: $id }) {
-						deletedId
-					}
-				}
-			`,
+      query: DELETE_PROJECT,
       variables: {
         id: id,
       },
@@ -320,19 +182,104 @@ export async function LikeProject(id: string, likes: number) {
     method: "POST",
     headers: fetchHeader,
     body: JSON.stringify({
-      query: `
-				  mutation LikeProject($id: ID!, $likes: Int) {
-					  projectUpdate(by: { id: $id } input {likes: {set: $likes}}) {
-						id  
-						likes
-					  }
-				  }
-			  `,
+      query: LIKE_PROJECT,
       variables: {
         id: id,
         likes: likes,
       },
     }),
+  });
+
+  const { data } = await res.json();
+
+  return data;
+}
+
+export async function getUserByEmail(email: string) {
+  const variables = {
+    email: email,
+  };
+
+  const encodedQuery = encodeURIComponent(GET_USER_BY_EMAIL);
+  const encodedVariables = encodeURIComponent(JSON.stringify(variables));
+  const url = `${process.env.GRAFBASE_API_URL}?query=${encodedQuery}&variables=${encodedVariables}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: fetchHeader,
+  });
+
+  const { data } = await res.json();
+  console.log("*************************", data, email);
+
+  return data;
+}
+
+export async function AddUser(
+  email: string,
+  name: string,
+  image: string,
+  description: string | null,
+  linkedinUrl: string | null,
+  githubUrl: string | null
+) {
+  const res = await fetch(`${process.env.GRAFBASE_API_URL}`, {
+    method: "POST",
+    headers: fetchHeader,
+    body: JSON.stringify({
+      query: ADD_USER,
+      variables: {
+        email: email,
+        name: name,
+        image: image,
+        description: description,
+        linkedinUrl: linkedinUrl,
+        githubUrl: githubUrl,
+      },
+    }),
+  });
+
+  const { data } = await res.json();
+
+  return data;
+}
+
+export async function EditUser(
+  email: string,
+  image: string,
+  name: string,
+  description: string,
+  linkedinUrl: string,
+  githubUrl: string
+) {
+  const res = await fetch(`${process.env.GRAFBASE_API_URL}`, {
+    method: "POST",
+    headers: fetchHeader,
+    body: JSON.stringify({
+      query: EDIT_USER,
+      variables: {
+        email: email,
+        image: image,
+        name: name,
+        description: description,
+        linkedinUrl: linkedinUrl,
+        githubUrl: githubUrl,
+      },
+    }),
+  });
+
+  const { data } = await res.json();
+
+  return data;
+}
+
+export async function getAllUsers() {
+  const encodedQuery = encodeURIComponent(GET_ALL_USER);
+  const url = `${process.env.GRAFBASE_API_URL}?query=${encodedQuery}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: fetchHeader,
   });
 
   const { data } = await res.json();

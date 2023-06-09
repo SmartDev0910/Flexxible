@@ -6,6 +6,7 @@ export interface INodeItems {
   liveSiteUrl?: string | null;
   githubUrl?: string | null;
   upvote?: boolean | false;
+  createdBy?: string;
 }
 
 export interface INodeParam {

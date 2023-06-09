@@ -16,6 +16,9 @@ export const POST = async (
     use_filename: true,
     unique_filename: false,
     overwrite: true,
+    transformation: [
+      { width: 1000, crop: 'scale' },
+    ]
   };
 
   try {
