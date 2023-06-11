@@ -14,7 +14,7 @@ const ProjectModal = async ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <ProjectView
-      user={user?.data}
+      user={user.userSearch?.edges[0]?.node}
       project={result}
       session={session}
       relatedProjects={resultByUser}

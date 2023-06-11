@@ -26,7 +26,7 @@ const PostForm: FC<Props> = ({ session }) => {
 
   const saveProject = async (event: SyntheticEvent) => {
     event.preventDefault();
-    const email = session?.email || "";
+    const username = session?.name || "";
 
     try {
       setSubmitting(true);
@@ -37,7 +37,7 @@ const PostForm: FC<Props> = ({ session }) => {
         image.url,
         url,
         githubUrl,
-        email,
+        username,
         category
       );
 
@@ -62,7 +62,7 @@ const PostForm: FC<Props> = ({ session }) => {
         return;
       }
 
-      fileReader.onload = (e: any) => {
+      fileReader.onload = (e) => {
         setPoster(e.target?.result);
       };
 

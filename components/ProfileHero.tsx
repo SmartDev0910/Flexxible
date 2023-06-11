@@ -1,12 +1,14 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import Image from "next/image";
 
-import ProfileButtons from '@/components/ProfileButtons';
+import ProfileButtons from "@/components/ProfileButtons";
+import { FC } from "react";
 
-const ProfileHero = ({ user }) => {
-  const { data: session } = useSession();
+type ProfileHeroProps = {
+  user: any;
+  projects: any;
+};
 
+const ProfileHero: FC<ProfileHeroProps> = ({ user, projects }) => {
   return (
     <section className="flexBetween max-lg:flex-col gap-y-10 w-full">
       <div>
@@ -19,20 +21,24 @@ const ProfileHero = ({ user }) => {
             alt="user image"
           />
         )}
-        <p className="text-[35px] leading-[42px] font-bold mt-[40px]">{user?.name}</p>
+        <p className="text-[35px] leading-[42px] font-bold mt-[40px]">
+          {user?.name}
+        </p>
         <p className="md:text-[47px] text-[30px] md:leading-[61px] leading-[32px] font-extrabold md:mt-[40px] mt-5 lg:max-w-[444px]">
           I’m Software Engineer at JSM 👋
         </p>
         <div className="flex mt-[30px] gap-5">
-          <ProfileButtons />
+          <ProfileButtons user={user} />
         </div>
       </div>
-      <Image
-        src="/assets/profile-project.png"
-        width={739}
-        height={554}
-        alt="project image"
-      />
+      {projects?.projectSearch?.edges?.length && (
+        <Image
+          src={projects?.projectSearch?.edges[0]?.node?.image}
+          width={739}
+          height={554}
+          alt="project image"
+        />
+      )}
     </section>
   );
 };

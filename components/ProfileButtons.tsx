@@ -1,16 +1,17 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import Image from "next/image";
+import Link from "next/link";
+import { FC } from "react";
 
-const ProfileButtons = () => {
-  const { data: session } = useSession();
+type ProfileButtonsProps = {
+  user: any;
+};
 
+const ProfileButtons: FC<ProfileButtonsProps> = ({ user }) => {
   return (
     <>
       <button
         type="button"
         className="flexCenter gap-[13px] p-[14px] text-[#252525] bg-[#F3F3F4] rounded-xl text-sm leading-[17px] font-medium"
-        onClick={() => console.log('Follow')}
       >
         <Image
           src="/assets/plus-round.svg"
@@ -21,7 +22,7 @@ const ProfileButtons = () => {
         Follow
       </button>
       <Link
-        href={`mailto:${session?.user?.email}`}
+        href={`mailto:${user?.email}`}
         className="flexCenter gap-[13px] p-[14px] text-white bg-primary-purple rounded-xl text-sm leading-[17px] font-medium"
       >
         <Image
@@ -35,7 +36,6 @@ const ProfileButtons = () => {
       <button
         type="button"
         className="flexCenter p-[14px] rounded-xl border-[1px] border-[#d9d9d9]"
-        onClick={() => console.log('-')}
       >
         <Image
           src="/assets/minus.svg"

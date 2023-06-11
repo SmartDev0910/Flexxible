@@ -20,7 +20,7 @@ const Home = async ({ searchParams }: HomeProps) => {
                 id={node?.id}
                 image={node?.image || ""}
                 title={node?.title || ""}
-                user={user?.data}
+                user={user.userSearch?.edges[0]?.node}
               />
             );
           }

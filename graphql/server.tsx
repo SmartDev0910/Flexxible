@@ -210,7 +210,6 @@ export async function getUserByEmail(email: string) {
   });
 
   const { data } = await res.json();
-  console.log("*************************", data, email);
 
   return data;
 }

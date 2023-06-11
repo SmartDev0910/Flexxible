@@ -11,11 +11,13 @@ import {
 } from "react";
 
 import CustomButton from "@/components/CustomButton";
+import { EditUser } from "@/graphql/server";
 
 type Props = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  userinfo: any;
 };
-const ProfileEditModal: FC<Props> = ({ setOpenModal }) => {
+const ProfileEditModal: FC<Props> = ({ setOpenModal, userinfo }) => {
   const [githubLink, setGithubLink] = useState("");
   const [linkedinLink, setLinkedinLink] = useState("");
 
@@ -39,8 +41,15 @@ const ProfileEditModal: FC<Props> = ({ setOpenModal }) => {
     window.document.body.style.overflowY = "hidden";
   }, []);
 
-  const updateInfo = () => {
-    console.log("update");
+  const updateInfo = async () => {
+    await EditUser(
+      userinfo.email,
+      userinfo.image,
+      userinfo.name,
+      userinfo.description,
+      linkedinLink,
+      githubLink
+    );
     setOpenModal(false);
   };
 
@@ -76,7 +85,10 @@ const ProfileEditModal: FC<Props> = ({ setOpenModal }) => {
           value={linkedinLink}
           onChange={(e) => setLinkedinLink(e.target.value)}
         />
-        <CustomButton title="Update Info" handleClick={() => updateInfo()} />
+        <CustomButton
+          title="Update Info"
+          handleClick={async () => await updateInfo()}
+        />
       </form>
     </div>
   );

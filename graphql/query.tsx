@@ -139,14 +139,31 @@ export const LIKE_PROJECT = `mutation LikeProject($id: ID!, $likes: Int) {
 }
 `;
 
-export const GET_USER_BY_EMAIL = `query getUserByEmail($email: string!) {
-	user(by: { email: $email }) {
-		email
-		name
-		image
-		description
-		githubUrl
-		linkedinUrl
+// export const GET_USER_BY_EMAIL = `query getUserByEmail($email: string!) {
+// 	user(by: { email: $email }) {
+// 		email
+// 		name
+// 		image
+// 		description
+// 		githubUrl
+// 		linkedinUrl
+// 	}
+// }
+// `;
+
+export const GET_USER_BY_EMAIL = `query getUserByEmail($email: String!) {
+	userSearch(first: 1, filter: { email: { eq: $email } }) {
+		edges {
+			node {
+				id
+				email
+				name
+				image
+				description
+				githubUrl
+				linkedinUrl
+			}
+		}
 	}
 }
 `;

@@ -1,28 +1,29 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import ProfileEditModal from '@/components/ProfileEditModal';
+import { useState, FC } from "react";
+import Link from "next/link";
+import ProfileEditModal from "@/components/ProfileEditModal";
 
-const ProfileAbout = () => {
+type Props = {
+  userinfo: any;
+};
+
+const ProfileAbout: FC<Props> = ({ userinfo }) => {
   const [github] = useState(null);
   const [linkedIn] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
-
   return (
     <section className="flexStart flex-col w-full lg:gap-[60px] gap-[30px] mt-[30px]">
-      {openEditModal && <ProfileEditModal setOpenModal={setOpenEditModal} />}
+      {openEditModal && (
+        <ProfileEditModal setOpenModal={setOpenEditModal} userinfo={userinfo} />
+      )}
       <div className="flex flex-col w-full gap-3">
         <p className="text-lg font-bold">Github</p>
-        {github ? (
-          <Link
-            href={github}
-            target="_blank"
-            rel="norefferer"
-          >
-            {github}
+        {userinfo?.githubUrl ? (
+          <Link href={userinfo?.githubUrl} target="_blank" rel="norefferer">
+            {userinfo?.githubUrl}
           </Link>
-        ): (
+        ) : (
           <button
             type="button"
             className="flex text-primary-purple"
@@ -34,15 +35,11 @@ const ProfileAbout = () => {
       </div>
       <div className="flex flex-col w-full gap-3">
         <p className="text-lg font-bold">LinkedIn</p>
-        {linkedIn ? (
-          <Link
-            href={linkedIn}
-            target="_blank"
-            rel="norefferer"
-          >
-            {linkedIn}
+        {userinfo?.linkedinUrl ? (
+          <Link href={userinfo?.linkedinUrl} target="_blank" rel="norefferer">
+            {userinfo?.linkedinUrl}
           </Link>
-        ): (
+        ) : (
           <button
             type="button"
             className="flex text-primary-purple"

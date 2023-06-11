@@ -16,9 +16,20 @@ export interface INodeParam {
 export interface FilterProps {
   category?: string | null;
   search?: string | null;
+  tab?: string | null;
 }
 
 export interface HomeProps {
   searchParams: FilterProps;
   result: any;
+}
+
+export interface UserProps {
+  email: string | undefined;
+  name: string | undefined;
+  image: string | undefined;
+}
+
+export interface ProfileProps {
+  searchParams: FilterProps;
 }

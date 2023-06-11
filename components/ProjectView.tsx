@@ -88,7 +88,7 @@ const ProjectView: FC<Props> = ({
           )}
           <div className="flexStart flex-col gap-y-[10px]">
             <p className="self-start text-[18px] leading-[22px] font-semibold">
-              {project?.project?.title}
+              {user?.name} - {project?.project?.title}
             </p>
             <div className="flex text-[14px] leading-[17px] font-normal gap-[9px] w-full">
               <Link href="/profile/id">
