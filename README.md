@@ -5,13 +5,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
-npm i -g concurrently
 npm run dev
 # or
-yarn global add concurrently
 yarn dev
 # or
-pnpm add -g concurrently
 pnpm dev
 ```
 
